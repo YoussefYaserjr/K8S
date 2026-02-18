@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rating-app
+  namespace: voting-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rating-app
+  template:
+    metadata:
+      labels:
+        app: rating-app
+    spec:
+      containers:
+      - name: rating-app
+        image: youssefyaser/rating-app:latest
+        env:
+          - name: DB_HOST
+            value: postgres
+          - name: DB_USER
+            value: postgres
+          - name: DB_PASSWORD
+            value: postgres
+          - name: DB_NAME
+            value: voting
+        ports:
+        - containerPort: 4000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rating-app
+  namespace: voting-app
+spec:
+  selector:
+    app: rating-app
+  type: LoadBalancer
+  ports:
+    - port: 4000
+      targetPort: 4000

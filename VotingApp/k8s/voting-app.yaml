@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voting-app
+  namespace: voting-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: voting-app
+  template:
+    metadata:
+      labels:
+        app: voting-app
+    spec:
+      containers:
+      - name: voting-app
+        image: youssefyaser/voting-app:latest
+        env:
+          - name: REDIS_HOST
+            value: redis
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: voting-app
+  namespace: voting-app
+spec:
+  selector:
+    app: voting-app
+  type: LoadBalancer
+  ports:
+    - port: 5000
+      targetPort: 5000

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: voting-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+      - name: worker
+        image: youssefyaser/worker:latest
+        env:
+          - name: REDIS_HOST
+            value: redis
+          - name: DB_HOST
+            value: postgres
+          - name: DB_USER
+            value: postgres
+          - name: DB_PASSWORD
+            value: postgres
+          - name: DB_NAME
+            value: voting
